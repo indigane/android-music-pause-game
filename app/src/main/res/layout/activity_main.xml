@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/statusIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Waiting to Start"
+        android:textSize="24sp"
+        android:layout_marginBottom="16dp"/>
+
+    <RadioGroup
+        android:id="@+id/gameModeSelector"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <RadioButton
+            android:id="@+id/modeMusicalStatues"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Musical Statues"
+            android:checked="true"/>
+
+        <RadioButton
+            android:id="@+id/modeMusicalChairs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Musical Chairs"/>
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Play Time (seconds)"/>
+
+    <SeekBar
+        android:id="@+id/playTimeMin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="60"
+        android:progress="10"/>
+
+    <SeekBar
+        android:id="@+id/playTimeMax"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="60"
+        android:progress="40"/>
+
+    <TextView
+        android:id="@+id/pauseTimeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pause Time (seconds)"/>
+
+    <SeekBar
+        android:id="@+id/pauseTimeMin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="15"
+        android:progress="3"/>
+
+    <SeekBar
+        android:id="@+id/pauseTimeMax"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="15"
+        android:progress="8"/>
+
+    <Switch
+        android:id="@+id/hapticFeedback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Haptic Feedback (Vibrate on Pause)"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/primaryActionButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="START GAME"/>
+
+</LinearLayout>
