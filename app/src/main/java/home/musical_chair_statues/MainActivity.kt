@@ -176,6 +176,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startGame() {
+        // Try to resume music if it's paused.
+        val event = KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY)
+        audioManager.dispatchMediaKeyEvent(event)
+
         if (!audioManager.isMusicActive) {
             Toast.makeText(this, getString(R.string.no_music_playing), Toast.LENGTH_SHORT).show()
             return
