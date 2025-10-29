@@ -177,7 +177,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun startGame() {
         if (!audioManager.isMusicActive) {
-            playMusic()
+            Toast.makeText(this, getString(R.string.no_music_playing), Toast.LENGTH_SHORT).show()
+            return
         }
 
         if (playTimeMin.progress > playTimeMax.progress) {

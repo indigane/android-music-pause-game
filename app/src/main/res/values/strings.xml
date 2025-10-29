@@ -11,4 +11,5 @@
     <string name="start_next_round">START NEXT ROUND</string>
     <string name="music_is_playing">🎶 MUSIC IS PLAYING 🎶</string>
     <string name="music_paused">⛔ MUSIC PAUSED ⛔</string>
+    <string name="no_music_playing">Please start playing music in another app first!</string>
 </resources>
