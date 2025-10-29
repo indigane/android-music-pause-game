@@ -49,43 +49,82 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/play_time_seconds"/>
-
-        <SeekBar
-            android:id="@+id/playTimeMin"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:max="60"
-            android:progress="10"/>
-
-        <SeekBar
-            android:id="@+id/playTimeMax"
+            android:orientation="horizontal">
+            <SeekBar
+                android:id="@+id/playTimeMin"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:max="60"
+                android:progress="10"/>
+            <TextView
+                android:id="@+id/playTimeMinLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10s"/>
+        </LinearLayout>
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:max="60"
-            android:progress="40"
-            android:layout_marginBottom="24dp"/>
+            android:orientation="horizontal"
+            android:layout_marginBottom="24dp">
+            <SeekBar
+                android:id="@+id/playTimeMax"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:max="60"
+                android:progress="40" />
+            <TextView
+                android:id="@+id/playTimeMaxLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="40s"/>
+        </LinearLayout>
 
         <TextView
             android:id="@+id/pauseTimeLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/pause_time_seconds"/>
-
-        <SeekBar
-            android:id="@+id/pauseTimeMin"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:max="15"
-            android:progress="3"/>
-
-        <SeekBar
-            android:id="@+id/pauseTimeMax"
+            android:orientation="horizontal">
+            <SeekBar
+                android:id="@+id/pauseTimeMin"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:max="15"
+                android:progress="3"/>
+            <TextView
+                android:id="@+id/pauseTimeMinLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3s"/>
+        </LinearLayout>
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:max="15"
-            android:progress="8"
-            android:layout_marginBottom="24dp"/>
-
+            android:orientation="horizontal"
+            android:layout_marginBottom="24dp">
+            <SeekBar
+                android:id="@+id/pauseTimeMax"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:max="15"
+                android:progress="8"/>
+            <TextView
+                android:id="@+id/pauseTimeMaxLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="8s"/>
+        </LinearLayout>
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/hapticFeedback"
             android:layout_width="wrap_content"

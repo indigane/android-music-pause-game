@@ -35,6 +35,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var pauseTimeMin: SeekBar
     private lateinit var pauseTimeMax: SeekBar
     private lateinit var pauseTimeLabel: TextView
+    private lateinit var playTimeMinLabel: TextView
+    private lateinit var playTimeMaxLabel: TextView
+    private lateinit var pauseTimeMinLabel: TextView
+    private lateinit var pauseTimeMaxLabel: TextView
     private lateinit var hapticFeedback: SwitchCompat
     private lateinit var primaryActionButton: Button
 
@@ -59,21 +63,34 @@ class MainActivity : AppCompatActivity() {
         pauseTimeMin = findViewById(R.id.pauseTimeMin)
         pauseTimeMax = findViewById(R.id.pauseTimeMax)
         pauseTimeLabel = findViewById(R.id.pauseTimeLabel)
+        playTimeMinLabel = findViewById(R.id.playTimeMinLabel)
+        playTimeMaxLabel = findViewById(R.id.playTimeMaxLabel)
+        pauseTimeMinLabel = findViewById(R.id.pauseTimeMinLabel)
+        pauseTimeMaxLabel = findViewById(R.id.pauseTimeMaxLabel)
         hapticFeedback = findViewById(R.id.hapticFeedback)
         primaryActionButton = findViewById(R.id.primaryActionButton)
 
         audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
         initMediaSession()
 
+        setupSliderWithValue(playTimeMin, playTimeMinLabel)
+        setupSliderWithValue(playTimeMax, playTimeMaxLabel)
+        setupSliderWithValue(pauseTimeMin, pauseTimeMinLabel)
+        setupSliderWithValue(pauseTimeMax, pauseTimeMaxLabel)
+
         gameModeSelector.setOnCheckedChangeListener { _, checkedId ->
             if (checkedId == R.id.modeMusicalChairs) {
                 pauseTimeMin.visibility = View.GONE
                 pauseTimeMax.visibility = View.GONE
                 pauseTimeLabel.visibility = View.GONE
+                pauseTimeMinLabel.visibility = View.GONE
+                pauseTimeMaxLabel.visibility = View.GONE
             } else {
                 pauseTimeMin.visibility = View.VISIBLE
                 pauseTimeMax.visibility = View.VISIBLE
                 pauseTimeLabel.visibility = View.VISIBLE
+                pauseTimeMinLabel.visibility = View.VISIBLE
+                pauseTimeMaxLabel.visibility = View.VISIBLE
             }
         }
 
@@ -85,6 +102,17 @@ class MainActivity : AppCompatActivity() {
         if (prefs.getBoolean("firstrun", true)) {
             showOnboardingDialog()
         }
+    }
+
+    private fun setupSliderWithValue(slider: SeekBar, label: TextView) {
+        label.text = "${slider.progress}s"
+        slider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                label.text = "${progress}s"
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
     }
 
     private fun initMediaSession() {
@@ -114,8 +142,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun startGame() {
         if (!audioManager.isMusicActive) {
-            Toast.makeText(this, "Please start playing music in another app first!", Toast.LENGTH_SHORT).show()
-            return
+            playMusic()
         }
 
         if (playTimeMin.progress > playTimeMax.progress) {
@@ -139,6 +166,7 @@ class MainActivity : AppCompatActivity() {
         handler.removeCallbacksAndMessages(null)
         statusIndicator.text = getString(R.string.waiting_to_start)
         primaryActionButton.text = getString(R.string.start_game)
+        pauseMusic()
     }
 
     private fun scheduleNextGameEvent() {
