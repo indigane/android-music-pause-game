@@ -19,10 +19,10 @@ fun getGitUserSuffix(): String {
 }
 
 android {
-    namespace = "home.app"
+    namespace = "home.musical_chair_statues"
     compileSdk = 35
     defaultConfig {
-        applicationId = "home.replace_me"
+        applicationId = "home.musical_chair_statues"
         minSdk = 26
         targetSdk = 35
         versionCode = 1

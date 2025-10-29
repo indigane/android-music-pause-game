@@ -1,4 +1,4 @@
-package home.app
+package home.musical_chair_statues
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
