@@ -72,13 +72,15 @@ class MainActivity : AppCompatActivity() {
 
         audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
         initMediaSession()
+        loadSettings()
 
-        setupSliderWithValue(playTimeMin, playTimeMinLabel)
-        setupSliderWithValue(playTimeMax, playTimeMaxLabel)
-        setupSliderWithValue(pauseTimeMin, pauseTimeMinLabel)
-        setupSliderWithValue(pauseTimeMax, pauseTimeMaxLabel)
+        setupSliderWithValue(playTimeMin, playTimeMinLabel, "playTimeMin")
+        setupSliderWithValue(playTimeMax, playTimeMaxLabel, "playTimeMax")
+        setupSliderWithValue(pauseTimeMin, pauseTimeMinLabel, "pauseTimeMin")
+        setupSliderWithValue(pauseTimeMax, pauseTimeMaxLabel, "pauseTimeMax")
 
         gameModeSelector.setOnCheckedChangeListener { _, checkedId ->
+            saveGameMode(checkedId)
             if (checkedId == R.id.modeMusicalChairs) {
                 pauseTimeMin.visibility = View.GONE
                 pauseTimeMax.visibility = View.GONE
@@ -94,6 +96,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        hapticFeedback.setOnCheckedChangeListener { _, isChecked ->
+            saveHapticFeedback(isChecked)
+        }
+
         primaryActionButton.setOnClickListener {
             handlePrimaryAction()
         }
@@ -104,15 +110,44 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupSliderWithValue(slider: SeekBar, label: TextView) {
+    private fun setupSliderWithValue(slider: SeekBar, label: TextView, prefKey: String) {
         label.text = "${slider.progress}s"
         slider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 label.text = "${progress}s"
+                saveSliderValue(prefKey, progress)
             }
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
+    }
+
+    private fun saveSliderValue(key: String, value: Int) {
+        getSharedPreferences("prefs", MODE_PRIVATE).edit {
+            putInt(key, value)
+        }
+    }
+
+    private fun saveGameMode(checkedId: Int) {
+        getSharedPreferences("prefs", MODE_PRIVATE).edit {
+            putInt("gameMode", checkedId)
+        }
+    }
+
+    private fun saveHapticFeedback(isChecked: Boolean) {
+        getSharedPreferences("prefs", MODE_PRIVATE).edit {
+            putBoolean("hapticFeedback", isChecked)
+        }
+    }
+
+    private fun loadSettings() {
+        val prefs = getSharedPreferences("prefs", MODE_PRIVATE)
+        playTimeMin.progress = prefs.getInt("playTimeMin", 10)
+        playTimeMax.progress = prefs.getInt("playTimeMax", 40)
+        pauseTimeMin.progress = prefs.getInt("pauseTimeMin", 3)
+        pauseTimeMax.progress = prefs.getInt("pauseTimeMax", 8)
+        gameModeSelector.check(prefs.getInt("gameMode", R.id.modeMusicalStatues))
+        hapticFeedback.isChecked = prefs.getBoolean("hapticFeedback", false)
     }
 
     private fun initMediaSession() {
