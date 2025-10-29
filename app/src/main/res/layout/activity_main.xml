@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android.layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     android:padding="16dp"
     tools:context=".MainActivity">
@@ -12,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Waiting to Start"
+        android:text="@string/waiting_to_start"
         android:textSize="24sp"
         android:layout_marginBottom="16dp"/>
 
@@ -27,20 +28,20 @@
             android:id="@+id/modeMusicalStatues"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Musical Statues"
+            android:text="@string/musical_statues"
             android:checked="true"/>
 
         <RadioButton
             android:id="@+id/modeMusicalChairs"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Musical Chairs"/>
+            android:text="@string/musical_chairs"/>
     </RadioGroup>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Play Time (seconds)"/>
+        android:text="@string/play_time_seconds"/>
 
     <SeekBar
         android:id="@+id/playTimeMin"
@@ -60,7 +61,7 @@
         android:id="@+id/pauseTimeLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Pause Time (seconds)"/>
+        android:text="@string/pause_time_seconds"/>
 
     <SeekBar
         android:id="@+id/pauseTimeMin"
@@ -76,17 +77,17 @@
         android:max="15"
         android:progress="8"/>
 
-    <Switch
+    <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/hapticFeedback"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Haptic Feedback (Vibrate on Pause)"
+        android:text="@string/haptic_feedback"
         android:layout_marginBottom="16dp"/>
 
     <Button
         android:id="@+id/primaryActionButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="START GAME"/>
+        android:text="@string/start_game"/>
 
 </LinearLayout>

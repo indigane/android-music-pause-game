@@ -14,11 +14,12 @@ import android.widget.Button
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.SeekBar
-import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
+import androidx.core.content.edit
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,7 +32,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var pauseTimeMin: SeekBar
     private lateinit var pauseTimeMax: SeekBar
     private lateinit var pauseTimeLabel: TextView
-    private lateinit var hapticFeedback: Switch
+    private lateinit var hapticFeedback: SwitchCompat
     private lateinit var primaryActionButton: Button
 
     private lateinit var audioManager: AudioManager
@@ -98,7 +99,7 @@ class MainActivity : AppCompatActivity() {
             if (isPausedForMusicalChairs) {
                 isPausedForMusicalChairs = false
                 playMusic()
-                primaryActionButton.text = "STOP GAME"
+                primaryActionButton.text = getString(R.string.stop_game)
                 scheduleNextGameEvent()
             } else {
                 stopGame()
@@ -125,7 +126,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         isGameRunning = true
-        primaryActionButton.text = "STOP GAME"
+        primaryActionButton.text = getString(R.string.stop_game)
         handler.post(gameLoop)
     }
 
@@ -133,8 +134,8 @@ class MainActivity : AppCompatActivity() {
         isGameRunning = false
         isPausedForMusicalChairs = false
         handler.removeCallbacksAndMessages(null)
-        statusIndicator.text = "Waiting to Start"
-        primaryActionButton.text = "START GAME"
+        statusIndicator.text = getString(R.string.waiting_to_start)
+        primaryActionButton.text = getString(R.string.start_game)
     }
 
     private fun scheduleNextGameEvent() {
@@ -147,7 +148,7 @@ class MainActivity : AppCompatActivity() {
                     pauseMusic()
                     if (modeMusicalChairs.isChecked) {
                         isPausedForMusicalChairs = true
-                        primaryActionButton.text = "START NEXT ROUND"
+                        primaryActionButton.text = getString(R.string.start_next_round)
                     } else {
                         scheduleNextGameEvent()
                     }
@@ -176,14 +177,14 @@ class MainActivity : AppCompatActivity() {
     private fun playMusic() {
         val event = KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY)
         audioManager.dispatchMediaKeyEvent(event)
-        statusIndicator.text = "🎶 MUSIC IS PLAYING 🎶"
+        statusIndicator.text = getString(R.string.music_is_playing)
         isMusicPlaying = true
     }
 
     private fun pauseMusic() {
         val event = KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PAUSE)
         audioManager.dispatchMediaKeyEvent(event)
-        statusIndicator.text = "⛔ MUSIC PAUSED ⛔"
+        statusIndicator.text = getString(R.string.music_paused)
         isMusicPlaying = false
         if (hapticFeedback.isChecked) {
             val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
@@ -197,9 +198,9 @@ class MainActivity : AppCompatActivity() {
             .setMessage("To use this app:\n\n1. Open your favorite music app (Spotify, etc.) and start playing a playlist.\n2. Come back here, choose your settings, and tap 'Start Game'.\n\nWe'll handle the pausing and playing for you!")
             .setPositiveButton("Got it!") { dialog, _ ->
                 dialog.dismiss()
-                val prefs = getSharedPreferences("prefs", MODE_PRIVATE).edit()
-                prefs.putBoolean("firstrun", false)
-                prefs.apply()
+                getSharedPreferences("prefs", MODE_PRIVATE).edit {
+                    putBoolean("firstrun", false)
+                }
             }
             .create()
             .show()
