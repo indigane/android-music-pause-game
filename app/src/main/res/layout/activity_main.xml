@@ -4,15 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:padding="16dp"
+    android:padding="24dp"
     tools:context=".MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_alignParentTop="true"
-        android:layout_above="@id/primaryActionButton">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/statusIndicator"
@@ -20,16 +18,19 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/waiting_to_start"
-            android:textSize="24sp"
-            android:layout_marginBottom="32dp"/>
+            android:textSize="24sp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
         <RadioGroup
             android:id="@+id/gameModeSelector"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:orientation="horizontal"
-            android:layout_marginBottom="32dp">
+            android:orientation="horizontal">
 
             <RadioButton
                 android:id="@+id/modeMusicalStatues"
@@ -44,6 +45,11 @@
                 android:layout_height="wrap_content"
                 android:text="@string/musical_chairs"/>
         </RadioGroup>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -69,8 +75,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="24dp">
+            android:orientation="horizontal">
             <SeekBar
                 android:id="@+id/playTimeMax"
                 android:layout_width="0dp"
@@ -84,6 +89,11 @@
                 android:layout_height="wrap_content"
                 android:text="40s"/>
         </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/pauseTimeLabel"
@@ -110,8 +120,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="24dp">
+            android:orientation="horizontal">
             <SeekBar
                 android:id="@+id/pauseTimeMax"
                 android:layout_width="0dp"
@@ -125,6 +134,10 @@
                 android:layout_height="wrap_content"
                 android:text="8s"/>
         </LinearLayout>
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/hapticFeedback"
             android:layout_width="wrap_content"
@@ -132,14 +145,17 @@
             android:layout_gravity="center_horizontal"
             android:text="@string/haptic_feedback"/>
 
-    </LinearLayout>
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2" />
 
-    <Button
-        android:id="@+id/primaryActionButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="24dp"
-        android:text="@string/start_game"/>
+        <Button
+            android:id="@+id/primaryActionButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:text="@string/start_game"/>
+    </LinearLayout>
 
 </RelativeLayout>
