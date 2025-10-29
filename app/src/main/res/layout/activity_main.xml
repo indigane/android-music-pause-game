@@ -1,93 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android.layout_height="match_parent"
+    android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:orientation="vertical"
     android:padding="16dp"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/statusIndicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/waiting_to_start"
-        android:textSize="24sp"
-        android:layout_marginBottom="16dp"/>
-
-    <RadioGroup
-        android:id="@+id/gameModeSelector"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="16dp">
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_above="@id/primaryActionButton">
 
-        <RadioButton
-            android:id="@+id/modeMusicalStatues"
+        <TextView
+            android:id="@+id/statusIndicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/musical_statues"
-            android:checked="true"/>
+            android:layout_gravity="center_horizontal"
+            android:text="@string/waiting_to_start"
+            android:textSize="24sp"
+            android:layout_marginBottom="32dp"/>
 
-        <RadioButton
-            android:id="@+id/modeMusicalChairs"
+        <RadioGroup
+            android:id="@+id/gameModeSelector"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:layout_marginBottom="32dp">
+
+            <RadioButton
+                android:id="@+id/modeMusicalStatues"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/musical_statues"
+                android:checked="true"/>
+
+            <RadioButton
+                android:id="@+id/modeMusicalChairs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/musical_chairs"/>
+        </RadioGroup>
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/musical_chairs"/>
-    </RadioGroup>
+            android:text="@string/play_time_seconds"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/play_time_seconds"/>
+        <SeekBar
+            android:id="@+id/playTimeMin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="60"
+            android:progress="10"/>
 
-    <SeekBar
-        android:id="@+id/playTimeMin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="60"
-        android:progress="10"/>
+        <SeekBar
+            android:id="@+id/playTimeMax"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="60"
+            android:progress="40"
+            android:layout_marginBottom="24dp"/>
 
-    <SeekBar
-        android:id="@+id/playTimeMax"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="60"
-        android:progress="40"/>
+        <TextView
+            android:id="@+id/pauseTimeLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pause_time_seconds"/>
 
-    <TextView
-        android:id="@+id/pauseTimeLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/pause_time_seconds"/>
+        <SeekBar
+            android:id="@+id/pauseTimeMin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="15"
+            android:progress="3"/>
 
-    <SeekBar
-        android:id="@+id/pauseTimeMin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="15"
-        android:progress="3"/>
+        <SeekBar
+            android:id="@+id/pauseTimeMax"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="15"
+            android:progress="8"
+            android:layout_marginBottom="24dp"/>
 
-    <SeekBar
-        android:id="@+id/pauseTimeMax"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="15"
-        android:progress="8"/>
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/hapticFeedback"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/haptic_feedback"/>
 
-    <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/hapticFeedback"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/haptic_feedback"
-        android:layout_marginBottom="16dp"/>
+    </LinearLayout>
 
     <Button
         android:id="@+id/primaryActionButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="24dp"
         android:text="@string/start_game"/>
 
-</LinearLayout>
+</RelativeLayout>
