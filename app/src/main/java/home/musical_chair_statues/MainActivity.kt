@@ -180,24 +180,27 @@ class MainActivity : AppCompatActivity() {
         val event = KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY)
         audioManager.dispatchMediaKeyEvent(event)
 
-        if (!audioManager.isMusicActive) {
-            Toast.makeText(this, getString(R.string.no_music_playing), Toast.LENGTH_SHORT).show()
-            return
-        }
+        // Add a delay to give the music player time to update its state.
+        handler.postDelayed({
+            if (!audioManager.isMusicActive) {
+                Toast.makeText(this, getString(R.string.no_music_playing), Toast.LENGTH_SHORT).show()
+                return@postDelayed
+            }
 
-        if (playTimeMin.progress > playTimeMax.progress) {
-            Toast.makeText(this, "Min play time cannot be greater than max play time!", Toast.LENGTH_SHORT).show()
-            return
-        }
+            if (playTimeMin.progress > playTimeMax.progress) {
+                Toast.makeText(this, "Min play time cannot be greater than max play time!", Toast.LENGTH_SHORT).show()
+                return@postDelayed
+            }
 
-        if (modeMusicalStatues.isChecked && pauseTimeMin.progress > pauseTimeMax.progress) {
-            Toast.makeText(this, "Min pause time cannot be greater than max pause time!", Toast.LENGTH_SHORT).show()
-            return
-        }
+            if (modeMusicalStatues.isChecked && pauseTimeMin.progress > pauseTimeMax.progress) {
+                Toast.makeText(this, "Min pause time cannot be greater than max pause time!", Toast.LENGTH_SHORT).show()
+                return@postDelayed
+            }
 
-        isGameRunning = true
-        primaryActionButton.text = getString(R.string.stop_game)
-        handler.post(gameLoop)
+            isGameRunning = true
+            primaryActionButton.text = getString(R.string.stop_game)
+            handler.post(gameLoop)
+        }, 500) // 500ms delay
     }
 
     private fun stopGame() {
