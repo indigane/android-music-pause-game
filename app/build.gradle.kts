@@ -20,11 +20,11 @@ fun getGitUserSuffix(): String {
 
 android {
     namespace = "home.musical_chair_statues"
-    compileSdk = 35
+    compileSdk = 36
     defaultConfig {
         applicationId = "home.musical_chair_statues"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0.0"
 
@@ -72,11 +72,12 @@ android {
 
 dependencies {
     // Core libraries
-    implementation("androidx.core:core-ktx:1.16.0")
-    implementation("com.google.android.material:material:1.12.0")
+    implementation("androidx.core:core-ktx:1.17.0")
+    implementation("com.google.android.material:material:1.13.0")
+    implementation("androidx.media:media:1.7.1")
 
     // Testing libraries
     testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.test.ext:junit:1.3.0")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")
 }

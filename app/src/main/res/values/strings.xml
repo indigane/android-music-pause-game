@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Musical Chair Statues</string>
+    <string name="waiting_to_start">Waiting to Start</string>
+    <string name="musical_statues">Musical Statues</string>
+    <string name="musical_chairs">Musical Chairs</string>
+    <string name="play_time_seconds">Play Time (seconds)</string>
+    <string name="pause_time_seconds">Pause Time (seconds)</string>
+    <string name="haptic_feedback">Haptic Feedback (Vibrate on Pause)</string>
+    <string name="start_game">START GAME</string>
+    <string name="stop_game">STOP GAME</string>
+    <string name="start_next_round">START NEXT ROUND</string>
+    <string name="music_is_playing">🎶 MUSIC IS PLAYING 🎶</string>
+    <string name="music_paused">⛔ MUSIC PAUSED ⛔</string>
+    <string name="no_music_playing">Please start playing music in another app first!</string>
 </resources>
