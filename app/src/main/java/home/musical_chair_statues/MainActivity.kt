@@ -212,8 +212,6 @@ class MainActivity : AppCompatActivity() {
             isGameRunning = true
             updateButtonIcon()
             handler.post(gameLoop)
-            val playTime = (playTimeMin.progress..playTimeMax.progress).random() * 1000L
-            startTimer(playTime)
         }, 500) // 500ms delay
     }
 
