@@ -160,6 +160,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun initMediaSession() {
         mediaSession = MediaSessionCompat(this, "MusicalChairStatues").apply {
+            setFlags(
+                MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or
+                MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
+            )
             setPlaybackState(PlaybackStateCompat.Builder()
                 .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE)
                 .setState(PlaybackStateCompat.STATE_PLAYING, 0, 1.0f)
