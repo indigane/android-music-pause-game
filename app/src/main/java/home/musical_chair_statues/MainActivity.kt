@@ -4,16 +4,18 @@ import android.content.Context
 import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
+import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.view.KeyEvent
 import android.view.View
-import android.widget.Button
+import android.widget.ImageButton
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.SeekBar
@@ -40,7 +42,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var pauseTimeMinLabel: TextView
     private lateinit var pauseTimeMaxLabel: TextView
     private lateinit var hapticFeedback: SwitchCompat
-    private lateinit var primaryActionButton: Button
+    private lateinit var primaryActionButton: ImageButton
+    private lateinit var timerView: TimerView
+    private var timer: CountDownTimer? = null
 
     private lateinit var audioManager: AudioManager
     private var mediaSession: MediaSessionCompat? = null
@@ -69,6 +73,7 @@ class MainActivity : AppCompatActivity() {
         pauseTimeMaxLabel = findViewById(R.id.pauseTimeMaxLabel)
         hapticFeedback = findViewById(R.id.hapticFeedback)
         primaryActionButton = findViewById(R.id.primaryActionButton)
+        timerView = findViewById(R.id.timerView)
 
         audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
         initMediaSession()
@@ -152,7 +157,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun initMediaSession() {
         mediaSession = MediaSessionCompat(this, "MusicalChairStatues").apply {
-            setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS)
+            val metadata = MediaMetadataCompat.Builder()
+                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, "Musical Chair Statues")
+                .build()
+            setMetadata(metadata)
             setPlaybackState(PlaybackStateCompat.Builder()
                 .setState(PlaybackStateCompat.STATE_PLAYING, 0, 1.0f)
                 .build())
@@ -165,13 +173,21 @@ class MainActivity : AppCompatActivity() {
             if (isPausedForMusicalChairs) {
                 isPausedForMusicalChairs = false
                 playMusic()
-                primaryActionButton.text = getString(R.string.stop_game)
                 scheduleNextGameEvent()
             } else {
                 stopGame()
             }
         } else {
             startGame()
+        }
+        updateButtonIcon()
+    }
+
+    private fun updateButtonIcon() {
+        if (isGameRunning) {
+            primaryActionButton.setImageResource(R.drawable.ic_stop)
+        } else {
+            primaryActionButton.setImageResource(R.drawable.ic_play)
         }
     }
 
@@ -198,7 +214,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             isGameRunning = true
-            primaryActionButton.text = getString(R.string.stop_game)
+            updateButtonIcon()
             handler.post(gameLoop)
         }, 500) // 500ms delay
     }
@@ -208,7 +224,9 @@ class MainActivity : AppCompatActivity() {
         isPausedForMusicalChairs = false
         handler.removeCallbacksAndMessages(null)
         statusIndicator.text = getString(R.string.waiting_to_start)
-        primaryActionButton.text = getString(R.string.start_game)
+        updateButtonIcon()
+        timer?.cancel()
+        timerView.setProgress(0f)
         pauseMusic()
     }
 
@@ -222,12 +240,14 @@ class MainActivity : AppCompatActivity() {
                     pauseMusic()
                     if (modeMusicalChairs.isChecked) {
                         isPausedForMusicalChairs = true
-                        primaryActionButton.text = getString(R.string.start_next_round)
+                        timer?.cancel()
+                        timerView.setProgress(0f)
                     } else {
                         scheduleNextGameEvent()
                     }
                 }
             }, playTime)
+            startTimer(playTime)
         } else {
             val pauseTime = (pauseTimeMin.progress..pauseTimeMax.progress).random() * 1000L
             handler.postDelayed({
@@ -236,6 +256,7 @@ class MainActivity : AppCompatActivity() {
                     scheduleNextGameEvent()
                 }
             }, pauseTime)
+            startTimer(pauseTime)
         }
     }
 
@@ -275,6 +296,20 @@ class MainActivity : AppCompatActivity() {
                 vibrator.vibrate(100)
             }
         }
+    }
+
+    private fun startTimer(duration: Long) {
+        timer?.cancel()
+        timer = object : CountDownTimer(duration, 16) {
+            override fun onTick(millisUntilFinished: Long) {
+                val progress = (duration - millisUntilFinished).toFloat() / duration
+                timerView.setProgress(progress)
+            }
+
+            override fun onFinish() {
+                timerView.setProgress(0f)
+            }
+        }.start()
     }
 
     private fun showOnboardingDialog() {
