@@ -175,6 +175,8 @@
                 android:layout_height="150dp"
                 android:layout_gravity="center"
                 android:background="@drawable/bg_round_button"
+                android:padding="32dp"
+                android:scaleType="fitCenter"
                 android:src="@drawable/ic_play"
                 android:contentDescription="@string/play_or_stop_the_game" />
         </FrameLayout>

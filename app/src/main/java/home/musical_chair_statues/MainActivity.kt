@@ -212,8 +212,6 @@ class MainActivity : AppCompatActivity() {
             isGameRunning = true
             updateButtonIcon()
             handler.post(gameLoop)
-            val playTime = (playTimeMin.progress..playTimeMax.progress).random() * 1000L
-            startTimer(playTime)
         }, 500) // 500ms delay
     }
 
@@ -298,7 +296,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun startTimer(duration: Long) {
         timer?.cancel()
-        timer = object : CountDownTimer(duration, 100) {
+        timer = object : CountDownTimer(duration, 16) {
             override fun onTick(millisUntilFinished: Long) {
                 val progress = (duration - millisUntilFinished).toFloat() / duration
                 timerView.setProgress(progress)
