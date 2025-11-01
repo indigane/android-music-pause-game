@@ -2,12 +2,12 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="true">
         <shape android:shape="oval">
-            <solid android:color="?attr/colorPrimaryVariant"/>
+            <solid android:color="@color/button_color_pressed"/>
         </shape>
     </item>
     <item>
         <shape android:shape="oval">
-            <solid android:color="?attr/colorPrimary"/>
+            <solid android:color="@color/button_color_normal"/>
         </shape>
     </item>
 </selector>
