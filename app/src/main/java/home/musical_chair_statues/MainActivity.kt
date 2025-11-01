@@ -27,6 +27,10 @@ import androidx.core.content.edit
 
 class MainActivity : AppCompatActivity() {
 
+    companion object {
+        private const val TIMER_INTERVAL_MS = 16L
+    }
+
     private lateinit var statusIndicator: TextView
     private lateinit var gameModeSelector: RadioGroup
     private lateinit var modeMusicalStatues: RadioButton
@@ -156,8 +160,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun initMediaSession() {
         mediaSession = MediaSessionCompat(this, "MusicalChairStatues").apply {
-            setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS)
             setPlaybackState(PlaybackStateCompat.Builder()
+                .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE)
                 .setState(PlaybackStateCompat.STATE_PLAYING, 0, 1.0f)
                 .build())
             isActive = true
@@ -296,7 +300,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun startTimer(duration: Long) {
         timer?.cancel()
-        timer = object : CountDownTimer(duration, 16) {
+        timer = object : CountDownTimer(duration, TIMER_INTERVAL_MS) {
             override fun onTick(millisUntilFinished: Long) {
                 val progress = (duration - millisUntilFinished).toFloat() / duration
                 timerView.setProgress(progress)

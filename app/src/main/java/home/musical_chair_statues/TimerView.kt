@@ -6,20 +6,25 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
+import androidx.core.content.ContextCompat
 import kotlin.math.min
 
 class TimerView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
-    private val paint = Paint().apply {
-        isAntiAlias = true
-        style = Paint.Style.STROKE
-        strokeWidth = 12f
-        color = 0x80FFFFFF.toInt() // Semi-transparent white
-    }
+    private val paint = Paint()
     private val rect = RectF()
     private var sweepAngle = 0f
+
+    init {
+        paint.apply {
+            isAntiAlias = true
+            style = Paint.Style.STROKE
+            strokeWidth = context.resources.getDimension(R.dimen.timer_stroke_width)
+            color = ContextCompat.getColor(context, R.color.timer_view_stroke_color)
+        }
+    }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
