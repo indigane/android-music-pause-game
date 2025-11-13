@@ -1,7 +1,10 @@
 package home.musical_chair_statues
 
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.media.AudioManager
+import android.media.session.MediaSessionManager
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -10,11 +13,16 @@ import android.os.Looper
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
+import android.provider.Settings
+import android.support.v4.media.MediaMetadataCompat
+import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import android.text.TextUtils
 import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.SeekBar
@@ -31,7 +39,9 @@ class MainActivity : AppCompatActivity() {
         private const val TIMER_INTERVAL_MS = 16L
     }
 
-    private lateinit var statusIndicator: TextView
+    private lateinit var albumArt: ImageView
+    private lateinit var trackTitle: TextView
+    private lateinit var trackArtist: TextView
     private lateinit var gameModeSelector: RadioGroup
     private lateinit var modeMusicalStatues: RadioButton
     private lateinit var modeMusicalChairs: RadioButton
@@ -53,15 +63,38 @@ class MainActivity : AppCompatActivity() {
     private var mediaSession: MediaSessionCompat? = null
 
     private var isGameRunning = false
+    private var mediaController: MediaControllerCompat? = null
     private var isMusicPlaying = false
     private var isPausedForMusicalChairs = false
     private val handler = Handler(Looper.getMainLooper())
+
+    private val mediaControllerCallback = object : MediaControllerCompat.Callback() {
+        override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
+            updateMediaInfo(metadata)
+        }
+
+        override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
+            if (state?.state == PlaybackStateCompat.STATE_PLAYING) {
+                if (trackTitle.text.toString() == getString(R.string.no_music_playing)) {
+                    trackTitle.text = getString(R.string.music_is_playing)
+                    trackArtist.text = ""
+                    albumArt.setImageResource(R.drawable.ic_play)
+                }
+            } else {
+                trackTitle.text = getString(R.string.no_music_playing)
+                trackArtist.text = ""
+                albumArt.setImageResource(R.drawable.ic_play)
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        statusIndicator = findViewById(R.id.statusIndicator)
+        albumArt = findViewById(R.id.albumArt)
+        trackTitle = findViewById(R.id.trackTitle)
+        trackArtist = findViewById(R.id.trackArtist)
         gameModeSelector = findViewById(R.id.gameModeSelector)
         modeMusicalStatues = findViewById(R.id.modeMusicalStatues)
         modeMusicalChairs = findViewById(R.id.modeMusicalChairs)
@@ -158,17 +191,65 @@ class MainActivity : AppCompatActivity() {
         hapticFeedback.isChecked = prefs.getBoolean("hapticFeedback", false)
     }
 
-    private fun initMediaSession() {
-        mediaSession = MediaSessionCompat(this, "MusicalChairStatues").apply {
-            setFlags(
-                MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or
-                MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
-            )
-            setPlaybackState(PlaybackStateCompat.Builder()
-                .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE)
-                .setState(PlaybackStateCompat.STATE_PLAYING, 0, 1.0f)
-                .build())
-            isActive = true
+    override fun onResume() {
+        super.onResume()
+        if (!isNotificationListenerEnabled()) {
+            showNotificationListenerPermissionDialog()
+        } else {
+            initMediaController()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mediaController?.unregisterCallback(mediaControllerCallback)
+    }
+
+    private fun isNotificationListenerEnabled(): Boolean {
+        val enabledListeners = Settings.Secure.getString(contentResolver, "enabled_notification_listeners")
+        val componentName = ComponentName(this, MediaNotificationListenerService::class.java)
+        return enabledListeners?.contains(componentName.flattenToString()) == true
+    }
+
+    private fun showNotificationListenerPermissionDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("Permission Required")
+            .setMessage("This app needs Notification Listener permission to control other music apps. Please grant the permission in the next screen.")
+            .setPositiveButton("Open Settings") { _, _ ->
+                startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+                finish()
+            }
+            .create()
+            .show()
+    }
+
+    private fun initMediaController() {
+        val mediaSessionManager = getSystemService(Context.MEDIA_SESSION_SERVICE) as MediaSessionManager
+        val componentName = ComponentName(this, MediaNotificationListenerService::class.java)
+        val controllers = mediaSessionManager.getActiveSessions(componentName)
+
+        if (controllers.isNotEmpty()) {
+            mediaController = MediaControllerCompat(this, controllers[0].sessionToken)
+            mediaController?.registerCallback(mediaControllerCallback)
+            updateMediaInfo(mediaController?.metadata)
+        } else {
+            trackTitle.text = getString(R.string.no_music_playing)
+            trackArtist.text = ""
+        }
+    }
+
+    private fun updateMediaInfo(metadata: MediaMetadataCompat?) {
+        if (metadata != null) {
+            trackTitle.text = metadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE)
+            trackArtist.text = metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST)
+            albumArt.setImageBitmap(metadata.getBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART))
+        } else {
+            trackTitle.text = getString(R.string.no_music_playing)
+            trackArtist.text = ""
+            albumArt.setImageResource(R.drawable.ic_play)
         }
     }
 
@@ -227,7 +308,7 @@ class MainActivity : AppCompatActivity() {
         isGameRunning = false
         isPausedForMusicalChairs = false
         handler.removeCallbacksAndMessages(null)
-        statusIndicator.text = getString(R.string.waiting_to_start)
+        updateMediaInfo(mediaController?.metadata)
         updateButtonIcon()
         timer?.cancel()
         timerView.setProgress(0f)
@@ -273,17 +354,29 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun initMediaSession() {
+        mediaSession = MediaSessionCompat(this, "MusicalChairStatues").apply {
+            setFlags(
+                MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or
+                MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
+            )
+            setPlaybackState(PlaybackStateCompat.Builder()
+                .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE)
+                .setState(PlaybackStateCompat.STATE_PLAYING, 0, 1.0f)
+                .build())
+            isActive = true
+        }
+    }
+
     private fun playMusic() {
         val event = KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY)
         audioManager.dispatchMediaKeyEvent(event)
-        statusIndicator.text = getString(R.string.music_is_playing)
         isMusicPlaying = true
     }
 
     private fun pauseMusic() {
         val event = KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PAUSE)
         audioManager.dispatchMediaKeyEvent(event)
-        statusIndicator.text = getString(R.string.music_paused)
         isMusicPlaying = false
         if (hapticFeedback.isChecked) {
             val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
